@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <malloc.h>
 
-
 typedef struct Node
 {
 	int data;
@@ -17,18 +16,21 @@ typedef struct DbList
 	Node* tail;
 }List;
 
-List* createList(List* lst);
+List* createList();
 void pushFront(List* lst, int value);
 void pushBack(List* lst, int value);
-void* popFront(List* list);
-void* popBack(List* lst);
+void popFront(List* list);
+void popBack(List* lst);
 void printList(List* lst);
-Node* GetList(List* list, size_t index);
-void insert(List* list, size_t index, int value);
-void* Erase(List* list, size_t index, size_t number);
-void* erase(List* list, size_t index);
+Node* GetList(List* list, const size_t index);
+void insert(List* list, const size_t index, int value);
+void Erase(List* list, const size_t index,  size_t number);
+void erase(List* list, const size_t index);
+void ReSize(List* lst, const size_t NewSize);
+void clear(List** lst);
+const size_t Size(List* lst);
 
-List *createList(List* lst)
+List *createList()
 {
 	List* tmp = (List*)malloc(sizeof(List));
 	tmp->size = 0;
@@ -67,48 +69,41 @@ void pushBack(List* lst, int value)
 		lst->head = tmp;
 	lst->size++;
 }
-void *popFront(List* list)
+void popFront(List* list)
 {
-	Node* tmp = list->head;
-	list->head = list->head->pNext;
-	 free(tmp);
-	list->size--;
-	/*if (list->head == NULL)
+	if (list->head == NULL)
 		return;
-	if (list->size == 1)
-		free(list);
 	Node* prev;
 	prev = list->head;
 	list->head = list->head->pNext;
 	if (list->head)
 		list->head->pPrev = NULL;
 	if (prev == list->tail)
-		list->tail = NULL;*/
-
-	//f/*ree(prev);
-	//list->size--;*/
+		list->tail = NULL;
+	free(prev);
+	list->size--;
 	
 }
-void* popBack(List* lst)
+void popBack(List* lst)
 {
-	if (lst->tail == NULL)
-		return;
-	void* tmp;
-	Node* prev;
-	prev = lst->tail;
-	lst->tail = lst->tail->pPrev;
-	if (lst->tail)
-		lst->tail->pNext = NULL;
-	if (prev == lst->head)
-		lst->head = NULL;
-	tmp = prev->data;
-	free(prev);
-	lst->size--;
-	return tmp;
+	if (!lst)
+	{
+		if (lst->tail == NULL)
+			return;
+		Node* prev;
+		prev = lst->tail;
+		lst->tail = lst->tail->pPrev;
+		if (lst->tail)
+			lst->tail->pNext = NULL;
+		if (prev == lst->head)
+			lst->head = NULL;
+		free(prev);
+		lst->size--;
+	}
 }
 void printList(List* lst)
 {
-	if (lst->size != 0)
+	if (lst->size != 0 || !lst)
 	{
 		int i = 0;
 		Node* tmp;
@@ -118,11 +113,10 @@ void printList(List* lst)
 			printf("%d\t%p\t%p\t%p\n",i,tmp,tmp->pPrev,tmp->pNext);
 	}
 	else
-		printf("Error!Size  == 0");
+		printf("Error!Size  = 0\n");
 }
-Node* GetList(List* list, size_t index)
+Node* GetList(List* list, const size_t index)
 {
-	index--;
 	Node* tmp = NULL;
 	size_t i;
 	if (index < list->size / 2)
@@ -147,7 +141,7 @@ Node* GetList(List* list, size_t index)
 	}
 	return tmp;
 }
-void insert(List* list, size_t index, int value)
+void insert(List* list, const size_t index, int value)
 {
 	if (list->size >= 1 && index > 0 && index <=list->size)
 	{
@@ -171,11 +165,11 @@ void insert(List* list, size_t index, int value)
 	else if (index == list->size)
 		pushBack(list, value);
 }
-size_t Size(List *lst)
+const size_t Size(List *lst)
 {
 	return lst->size;
 }
-void ReSize(List* lst, size_t NewSize)
+void ReSize(List* lst, const size_t NewSize)
 {
 	int temp = lst->size;
 	if (NewSize < lst->size)
@@ -189,7 +183,7 @@ void ReSize(List* lst, size_t NewSize)
 			pushBack(lst,0);
 	}
 }
-void *erase(List* list, size_t index)
+void erase(List* list, const size_t index)
 {
 	if (list->size == 1 || index - 1 == list->size)
 		popBack(list);
@@ -198,45 +192,54 @@ void *erase(List* list, size_t index)
 	else
 	{
 		Node* tmp = GetList(list, index);
-		void* value = NULL;
 		if (tmp->pPrev)
 			tmp->pPrev->pNext = tmp->pNext;
 		if (tmp->pNext)
 			tmp->pNext->pPrev = tmp->pPrev;
-		value = tmp->data;
 		if (!tmp->pNext)
 			list->tail = tmp->pPrev;
 		if (!tmp->pPrev)
 			list->head = tmp->pNext;
 		free(tmp);
 		list->size--;
+	}
+}
+void Erase(List* list, const size_t index, size_t number)
+{
 
-	}
-}
-void* Erase(List* list, size_t index, size_t number)
-{
-	for (int i = 0; i < number; i++)
-		erase(list, index);
-}
-void deletemem(List** lst)
-{
-	Node* tmp = (*lst)->head;
-	Node* next = NULL;
-	while (tmp)
+	if (index <= list->size)
 	{
-		next = tmp->pNext;
-		free(tmp);
-		tmp = next;
+		if (number > list->size)
+			number = list->size;
+		for (int i = 0; i < number; i++)
+			erase(list, index);
 	}
-	free(*lst);
-	(*lst) = NULL;
+}
+
+void clear(List** lst)
+{
+	if (!lst)
+	{
+		Node* tmp = (*lst)->head;
+		Node* next = NULL;
+		while (tmp)
+		{
+			next = tmp->pNext;
+			free(tmp);
+			tmp = next;
+		}
+		free(*lst);
+		(*lst) = NULL;
+	}
 }
 int main()
 {
-	List *lst = createList(&lst);
+	List *lst = createList();
 	pushFront(lst, 40);
-	insert(lst, 0, 50);
+	pushFront(lst, 54);
+	pushFront(lst, 100);
+	pushFront(lst, 100);
 	printList(lst);
-	deletemem(&lst);
+	clear(&lst);
 	return 0;
 }
