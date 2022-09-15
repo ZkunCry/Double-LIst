@@ -1,35 +1,4 @@
-﻿#define  _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <malloc.h>
-
-typedef struct Node
-{
-	struct Node* pNext;
-	struct Node* pPrev;
-
-}Node;
-typedef struct DbList
-{
-	size_t size;
-	Node* head;
-	Node* tail;
-}List;
-
-List* createList();
-void pushFront(List* lst,Node *temp);
-void pushBack(List* lst,Node *temp);
-void popFront(List* list);
-void popBack(List* lst);
-void printList(List* lst);
-Node* GetList(List* list, const size_t index);
-void insert(List* list, const size_t index,Node *temp);
-void Erase(List* list, const size_t index, size_t number);
-void erase(List* list, const size_t index);
-//void ReSize(List* lst, const size_t NewSize);
-void clear(List** lst);
-const size_t Size(List* lst);
-Node* Remove(List* lst, size_t index);
-
+#include "list.h"
 List* createList()
 {
 	List* tmp = (List*)malloc(sizeof(List));
@@ -37,7 +6,7 @@ List* createList()
 	tmp->head = tmp->tail = NULL;
 	return tmp;
 }
-void pushFront(List* lst,Node *temp)
+void pushFront(List* lst, Node* temp)
 {
 	if (lst)
 	{
@@ -55,7 +24,7 @@ void pushFront(List* lst,Node *temp)
 	else
 		printf("Error!\n Memory not allocated\n");
 }
-void pushBack(List* lst,Node *temp)
+void pushBack(List* lst, Node* temp)
 {
 	if (lst)
 	{
@@ -182,10 +151,10 @@ Node* GetList(List* list, const size_t index)
 	}
 }
 
-void insert(List* list, const size_t index,Node *temp)
+void insert(List* list, const size_t index, Node* temp)
 {
 	Node* tmp;
-	if (tmp = GetList(list,index))
+	if (tmp = GetList(list, index))
 	{
 		Node* elm = temp;
 		Node* prev = tmp->pPrev;
@@ -202,9 +171,9 @@ void insert(List* list, const size_t index,Node *temp)
 		list->size++;
 	}
 	else if (index == 0)
-		pushFront(list,temp);
+		pushFront(list, temp);
 	else if (index == list->size)
-		pushBack(list,temp);
+		pushBack(list, temp);
 }
 const size_t Size(List* lst)
 {
@@ -272,76 +241,4 @@ void clear(List** lst)
 		free(*lst);
 		(*lst) = NULL;
 	}
-}
-int main()
-{
-	/*List* lst = createList();*/
-	List* lst = NULL;
-	int choose,size;
-	do
-	{
-		Node* p;
-		printf("Select  an action:\n");
-		scanf("%d", &choose);
-		int index;
-		if (choose == 6 || choose == 7 || choose == 8 || choose == 9 || choose == 13)
-		{
-			printf("Enter an index\n");
-			scanf("%d", &index);
-		}
-		switch (choose)
-		{
-		case 1:
-			lst = createList();
-			break;
-		case 2:
-			p = malloc(sizeof(Node));
-			pushBack(lst,p);
-			break;
-		case 3:
-			p = malloc(sizeof(Node));
-			pushFront(lst,p);
-			break;
-		case 4:
-			popBack(lst);
-			break;
-		case 5:
-			popFront(lst);
-			break;
-		case 6:
-			 p = GetList(lst,index);
-			printf("#\tp\t\t\tprev\t\t\tnext\n");
-			printf("%d\t%p\t%p\t%p\n", 0, p, p->pPrev, p->pNext);
-			break;
-		case 7:
-			p = Remove(lst,index);
-			printf("#\tp\t\t\tprev\t\t\tnext\n");
-			printf("%d\t%p\t%p\t%p\n", 0, p, p->pPrev, p->pNext);
-			break;
-		case 8:
-			erase(lst, index);
-			break;
-		case 9:
-			int count;
-			printf("Enter a count\n");
-			scanf("%d", &count);
-			Erase(lst, index, count);
-			break;
-		case 10:
-			printList(lst);
-			break;
-		case 11:
-			size = Size(lst);
-			printf("Size = %d \n", size);
-			break;
-		case 12:
-			clear(&lst);
-			break;
-		case 13:
-			p = malloc(sizeof(Node));
-			insert(lst, index, p);
-			break;
-		}
-	} while (choose != 0);
-	return 0;
 }
