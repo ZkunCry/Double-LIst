@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "list.h"
-
+void printList(List* lst);
 
 int main()
 {
@@ -75,4 +75,18 @@ int main()
 		}
 	} while (choose != 0);
 	return 0;
+}
+void printList(List* lst)
+{
+	if (lst->size != 0)
+	{
+		int i = 0;
+		Node* tmp;
+		printf("List: %p\tHead: %p\tTail: %p\n", lst, lst->head, lst->tail);
+		printf("#\tp\t\tprev\t\tnext\n");
+		for (tmp = lst->head; tmp; tmp = tmp->pNext, i++)
+			printf("%d\t%p\t%p\t%p\n", i, tmp, tmp->pPrev, tmp->pNext);
+	}
+	else
+		printf("Error!Size  = 0\n");
 }

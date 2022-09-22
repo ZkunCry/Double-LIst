@@ -22,7 +22,7 @@ void pushFront(List* lst, Node* temp)
 		lst->size++;
 	}
 	else
-		printf("Error!\n Memory not allocated\n");
+		return;
 }
 void pushBack(List* lst, Node* temp)
 {
@@ -42,7 +42,7 @@ void pushBack(List* lst, Node* temp)
 		lst->size++;
 	}
 	else
-		printf("Error! Memory not allocated\n");
+		return;
 }
 void popFront(List* list)
 {
@@ -61,7 +61,7 @@ void popFront(List* list)
 		list->size--;
 	}
 	else
-		printf("Error!size = 0 or memory not allocated\n");
+		return;
 }
 void popBack(List* lst)
 {
@@ -80,7 +80,7 @@ void popBack(List* lst)
 		lst->size--;
 	}
 	else
-		printf("Error! size =0 or memory not allocated!\n");
+		return;
 }
 Node* Remove(List* lst, size_t index)
 {
@@ -99,23 +99,10 @@ Node* Remove(List* lst, size_t index)
 		return tmp;
 	}
 	else
-		printf("Error! index doesn't match\n");
+		return NULL;
 }
 
-void printList(List* lst)
-{
-	if (lst->size != 0)
-	{
-		int i = 0;
-		Node* tmp;
-		printf("List: %p\tHead: %p\tTail: %p\n", lst, lst->head, lst->tail);
-		printf("#\tp\t\tprev\t\tnext\n");
-		for (tmp = lst->head; tmp; tmp = tmp->pNext, i++)
-			printf("%d\t%p\t%p\t%p\n", i, tmp, tmp->pPrev, tmp->pNext);
-	}
-	else
-		printf("Error!Size  = 0\n");
-}
+
 Node* GetList(List* list, const size_t index)
 {
 	if (index < list->size && index >= 0)
@@ -145,35 +132,38 @@ Node* GetList(List* list, const size_t index)
 		return tmp;
 	}
 	else
-	{
-		printf("Not valid index\n");
 		return NULL;
-	}
 }
 
-void insert(List* list, const size_t index, Node* temp)
+void insert(List* list,size_t index, Node* temp)
 {
-	Node* tmp;
+	Node* tmp; 
+	if (index < 0)
+		index = 0;
 	if (tmp = GetList(list, index))
 	{
 		Node* elm = temp;
-		Node* prev = tmp->pPrev;
 		elm->pPrev = tmp->pPrev;
 		elm->pNext = tmp;
-		if (tmp->pNext)
-			tmp->pNext->pPrev = elm;
-		prev->pNext = elm;
 		tmp->pPrev = elm;
-		if (!tmp->pPrev)
-			list->head = tmp;
+		if (!elm->pPrev)
+		{
+			list->head = elm;
+		}
+		else
+			elm->pPrev->pNext = elm;
 		if (!tmp->pNext)
 			list->tail = tmp;
 		list->size++;
 	}
-	else if (index == 0)
-		pushFront(list, temp);
-	else if (index == list->size)
-		pushBack(list, temp);
+	else
+	{
+		temp->pNext = list->tail->pNext;
+		temp->pPrev = list->tail;
+		list->tail->pNext = temp;
+		list->tail = temp;
+		list->size++;
+	}
 }
 const size_t Size(List* lst)
 {
