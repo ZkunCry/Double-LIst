@@ -216,11 +216,11 @@ void Erase(List* list, const size_t index, size_t number)
 	}
 }
 
-void clear(List** lst)
+void clear(List* lst)
 {
-	if ((*lst))
+	if (lst)
 	{
-		Node* tmp = (*lst)->head;
+		Node* tmp = lst->head;
 		Node* next = NULL;
 		while (tmp)
 		{
@@ -228,7 +228,7 @@ void clear(List** lst)
 			free(tmp);
 			tmp = next;
 		}
-		free(*lst);
-		(*lst) = NULL;
+		lst->size = 0;
+		lst = NULL;
 	}
 }

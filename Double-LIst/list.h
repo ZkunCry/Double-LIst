@@ -1,14 +1,14 @@
 #pragma once
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
-typedef struct Node
+typedef struct Node 
 {
 	struct Node* pNext;
 	struct Node* pPrev;
 
 }Node;
-typedef struct DbList
+typedef struct DbList //Doubly linked list
 {
 	size_t size;
 	Node* head;
@@ -25,7 +25,7 @@ void insert(List* list, size_t index, Node* temp);
 void Erase(List* list, const size_t index, size_t number);
 void erase(List* list, const size_t index);
 //void ReSize(List* lst, const size_t NewSize);
-void clear(List** lst);
+void clear(List* lst);
 const size_t Size(List* lst);
 Node* Remove(List* lst, size_t index);
 

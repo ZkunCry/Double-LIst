@@ -1,92 +1,59 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <malloc.h>
-#include "list.h"
-void printList(List* lst);
+#include "subj.h"
+
 
 int main()
 {
-	/*List* lst = createList();*/
-	List* lst = NULL;
-	int choose, size;
+	List lst = { NULL,NULL };
+	Person* base= NULL;
+	TypeObject type;
+	char buf[100];
+
+	int choose;
 	do
 	{
-		Node* p;
-		printf("Select  an action:\n");
+		printf("Choose the options:\n"
+			"Menu:\n1.Create object\n2.Out information on display\n3.Add to the end\n"
+			"4.Add to the start\n5.Delete of the end\n6.Sort list\n7.Find by given word\n0.Exit and delete object\n");
 		scanf("%d", &choose);
-		int index;
-		if (choose == 6 || choose == 7 || choose == 8 || choose == 9 || choose == 13)
-		{
-			printf("Enter an index\n");
-			scanf("%d", &index);
-		}
 		switch (choose)
 		{
 		case 1:
-			lst = createList();
+			type = Menu();
+			base = create(type);
+			Input(base);
+			printf("Please choose a point 3 or 4\n");
+			fflush(stdin);
 			break;
 		case 2:
-			p = malloc(sizeof(Node));
-			pushBack(lst, p);
+			PrintList(&lst);
 			break;
 		case 3:
-			p = malloc(sizeof(Node));
-			pushFront(lst, p);
+			pushBack(&lst, (Node*)base);
 			break;
 		case 4:
-			popBack(lst);
+			pushFront(&lst, (Node*)base);
 			break;
 		case 5:
-			popFront(lst);
+			if (lst.size)
+				popBack(&lst);
 			break;
 		case 6:
-			p = GetList(lst, index);
-			printf("#\tp\t\t\tprev\t\t\tnext\n");
-			printf("%d\t%p\t%p\t%p\n", 0, p, p->pPrev, p->pNext);
+			sortlist(&lst);
 			break;
 		case 7:
-			p = Remove(lst, index);
-			printf("#\tp\t\t\tprev\t\t\tnext\n");
-			printf("%d\t%p\t%p\t%p\n", 0, p, p->pPrev, p->pNext);
+			printf("Enter a string\n");
+			fflush(stdin);
+			scanf("%s", buf);
+			search(&lst,buf);
 			break;
-		case 8:
-			erase(lst, index);
-			break;
-		case 9:
-			int count;
-			printf("Enter a count\n");
-			scanf("%d", &count);
-			Erase(lst, index, count);
-			break;
-		case 10:
-			printList(lst);
-			break;
-		case 11:
-			size = Size(lst);
-			printf("Size = %d \n", size);
-			break;
-		case 12:
+		case 0:
 			clear(&lst);
-			break;
-		case 13:
-			p = malloc(sizeof(Node));
-			insert(lst, index, p);
 			break;
 		}
 	} while (choose != 0);
+	
 	return 0;
-}
-void printList(List* lst)
-{
-	if (lst->size != 0)
-	{
-		int i = 0;
-		Node* tmp;
-		printf("List: %p\tHead: %p\tTail: %p\n", lst, lst->head, lst->tail);
-		printf("#\tp\t\tprev\t\tnext\n");
-		for (tmp = lst->head; tmp; tmp = tmp->pNext, i++)
-			printf("%d\t%p\t%p\t%p\n", i, tmp, tmp->pPrev, tmp->pNext);
-	}
-	else
-		printf("Error!Size  = 0\n");
 }
