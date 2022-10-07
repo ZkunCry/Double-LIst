@@ -10,11 +10,10 @@ int main()
 	Person* base= NULL;
 	TypeObject type;
 	char buf[100];
-
 	int choose;
 	do
 	{
-		printf("Choose the options:\n"
+		printf("\nChoose the options:\n"
 			"Menu:\n1.Create object\n2.Out information on display\n3.Add to the end\n"
 			"4.Add to the start\n5.Delete of the end\n6.Sort list\n7.Find by given word\n0.Exit and delete object\n");
 		scanf("%d", &choose);

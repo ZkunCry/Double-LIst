@@ -93,7 +93,7 @@ void Input(Person* base)
 int Menu()
 {
 	int i = 0;
-	printf("Enter a object:\n1.FIO\n2.Email\n3.Telephone\n4.Data\n");
+	printf("\nEnter a object:\n1.FIO\n2.Email\n3.Telephone\n4.Data\n");
 	fflush(stdin);
 	scanf("%d", &i);
 	return i<1 || i > length ? 0 : i;
@@ -139,7 +139,7 @@ void InputTelephone(Telephone* p)
 		printf("Error!\n Enter a again telephone:\n");
 		scanf("%s", p->telephone);
 	}
-	fflush(stdin);
+	getchar();
 	printf("Enter a expalantion:\n");
 	fgets(p->explanation, 100, stdin);
 
@@ -201,7 +201,7 @@ void PrintFio(FIO *p)
 }
 void PrintTelephone(Telephone* p)
 {
-	printf("Telephone: %s - %s \n", p->telephone,p->explanation);
+	printf("Telephone: %s\nExplanation: %s\n", p->telephone,p->explanation);
 	printf("TableNum: %d \n", p->TableNum);
 }
 void PrintEmail(Email* p)
@@ -225,12 +225,10 @@ int search_elements(Person* person, const char* str)
 	if (person->type == isData)
 	{
 		istr = strstr(((Data*)person)->TextNote, str);
-		Print(person);
 	}
 	else if (person->type == isTelephone)
 	{
 		istr = strstr(((Telephone*)person)->explanation, str);
-		Print(person);
 	}
 	if (istr)
 		flag = 1;
@@ -243,7 +241,10 @@ void search(List* lst, const char* str)
 	for (person; person; person = person->pNext)
 	{
 		if (search_elements(person, str))
+		{
+			Print(person);
 			count++;
+		}
 	}
 	if (count == 0)
 		printf("Search not found nothing\n");
@@ -256,10 +257,8 @@ Node* SearchMin(List* lst, Node* example,List *templist,int I)
 													класса FIO, если он нашелс€, он сравниваетс€ с исходным который 
 													мы передали в функцию*/
 	{
-		if (((Person*)temp)->type == isFIO && compare((FIO*)example, (FIO*)temp) && ((Person*)example)->type == isFIO)
-		{
+		if (((Person*)temp)->type == isFIO && ((Person*)example)->type == isFIO && compare((FIO*)example, (FIO*)temp))
 			count = i; //≈—ли получилось так что левый элемент больше правого, то мы запоминаем индекс правого
-		}
 	}
 	pushBack(templist,res =Remove(lst,count)); //«атем помещаем в список, но при этом надо не забыть удалить его из исходного списка!
 	count = 0;
@@ -314,5 +313,4 @@ void  sortlist(List* lst)
 	{
 		pushBack(lst, Remove(templist,0));
 	}
-
 }
