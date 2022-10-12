@@ -4,17 +4,16 @@ class List;
 
 class Node
 {
-    friend class List;
 private:
     Node* pNext;
     Node* pPrev;
     List* owner;
 protected:
     Node* PNext();
-    
 public:
     Node();
     ~Node();
+    friend class List;
 };
 class List
 {
@@ -22,7 +21,6 @@ private:
     Node* head;
     Node* tail;
     size_t size;
- 
 public:
     List();
     ~List();
