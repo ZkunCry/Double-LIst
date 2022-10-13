@@ -28,7 +28,6 @@ inline string FIO::GetFamily()
 	return this->family;
 }
 
-
 Person* Person::create(TypeObject type)
 {
 	Person* p = nullptr;
@@ -115,16 +114,16 @@ void Person::Input()
 		switch (this->type)
 		{
 		case TypeObject::isFIO:
-			static_cast<FIO*>(this)->InputFio();
+			static_cast<FIO*>(this)->Input();
 			break;
 		case TypeObject::isTelephone:
-			static_cast<Telephone*>(this)->InputTelephone();
+			static_cast<Telephone*>(this)->Input();
 			break;
 		case TypeObject::isEmail:
-			static_cast<Email*>(this)->InputEmail();
+			static_cast<Email*>(this)->Input();
 			break;
 		case TypeObject::isData:
-			static_cast<Data*>(this)->InputData();
+			static_cast<Data*>(this)->Input();
 			break;
 		}
 	}
@@ -145,7 +144,7 @@ void FIO::Print()
 	cout << "TableNum: " << TableNum<<endl;
 }
 
-void FIO::InputFio()
+void FIO::Input()
 {
 	cout << "Enter a FIO:" << endl;
 	cin >> family >> name >> fatherland;
@@ -160,7 +159,7 @@ Email::Email()
 
 Email::Email(int table):Person(TypeObject::isEmail,table){}
 
-void Email::InputEmail()
+void Email::Input()
 {
 	cout << "Enter a email adress:" << endl;
 	cin >> email;
@@ -181,7 +180,7 @@ Data::Data()
 
 Data::Data(int table):Person(TypeObject::isData,table){}
 
-void Data::InputData()
+void Data::Input()
 {
 	cout << "Enter a data:" << endl;
 	cin >> day >> month >> year;
@@ -231,7 +230,7 @@ void Telephone::Print()
 	cout << "TableNum: " << TableNum << endl;
 }
 
-void Telephone::InputTelephone()
+void Telephone::Input()
 {
 	cout << "Enter a telephone:" << endl;
 	cin >> telephone;
@@ -317,9 +316,10 @@ void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 {
 	Node* res = nullptr, * temp = this->Head();
 	int count = I, i = 0, flag = 1;
-	for (i; i < this->Size(); i++, temp = GetList(i))
+	for (i; i < this->Size(); i++, temp = temp->PNext())
 	{
-		if (((Person*)temp)->GetType() == TypeObject::isFIO && compare((FIO*)example, (FIO*)temp) && ((Person*)example)->GetType() == TypeObject::isFIO)
+		if (((Person*)temp)->GetType() == TypeObject::isFIO && compare((FIO*)example, (FIO*)temp) 
+			&& ((Person*)example)->GetType() == TypeObject::isFIO)
 		{
 			count = i;
 		}
@@ -330,7 +330,8 @@ void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 	int j = 0, size = this->Size();
 	for (; temp;)
 	{
-		if ((static_cast<Person*>(temp)->GetTablenum() == static_cast<Person*>(res)->GetTablenum() && static_cast<FIO*>(temp)->GetFamily() != static_cast<FIO*>(res)->GetFamily()))
+		if ((static_cast<Person*>(temp)->GetTablenum() == static_cast<Person*>(res)->GetTablenum() 
+			&& static_cast<FIO*>(temp)->GetFamily() != static_cast<FIO*>(res)->GetFamily()))
 		{
 			templist->pushBack(this->Remove(j));
 			temp = this->Head();
@@ -338,8 +339,9 @@ void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 		}
 		else
 		{
-			temp = this->GetList(j++);
+			temp = temp->PNext();
 			j++;
+			/*temp =GetList(j);*/
 		}
 
 	}

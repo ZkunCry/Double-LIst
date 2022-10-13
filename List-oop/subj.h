@@ -36,7 +36,7 @@ public:
 	FIO();
 	FIO(int table);
 	void Print();
-	void InputFio();
+	void Input();
 };
 
 class Email :public Person
@@ -46,7 +46,7 @@ private:
 public:
 	Email();
 	Email(int table);
-	void InputEmail();
+	void Input();
 	void Print();
 };
 
@@ -61,7 +61,7 @@ public:
 	Telephone(int table);
 	string GetExplanation();
 	void Print();
-	void InputTelephone();
+	void Input();
 };
 
 class Data :public Person
@@ -72,7 +72,7 @@ private:
 public:
 	Data();
 	Data(int table);
-	void InputData();
+	void Input();
 	std::string GetTextNote();
 	void Print();
 };

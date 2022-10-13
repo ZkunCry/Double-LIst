@@ -8,7 +8,7 @@ private:
     Node* pNext;
     Node* pPrev;
     List* owner;
-protected:
+public:
     Node* PNext();
 public:
     Node();
@@ -38,4 +38,5 @@ public:
     Node* RemoveNode(Node* node);
 protected:
     Node* Head();
+    Node* Pnext();
 };

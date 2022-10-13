@@ -272,3 +272,8 @@ Node* List::Head()
 {
 	return head;
 }
+
+Node* List::Pnext()
+{
+	return ((Node *)this)->pNext;
+}	
