@@ -1,11 +1,32 @@
 #include "subj.h"
 #include <string>
 #include <ctype.h>
-using namespace std;
 using std::cout;
 using std::cin;
 using std::endl;
-const size_t length = 4;
+const static size_t  length = 4;
+
+inline std::string Data::GetTextNote()
+{
+	return TextNote;
+}
+inline int Person::GetTablenum()
+{
+	return this->TableNum;
+}
+inline string Telephone::GetExplanation()
+{
+	return explanation;
+}
+inline TypeObject Person::GetType()
+{
+	return type;
+}
+
+inline string FIO::GetFamily()
+{
+	return this->family;
+}
 
 Person* Person::create(TypeObject type)
 {
@@ -78,10 +99,7 @@ void SubjList::Print()
 	else
 		printf("ERROR: wrong list!\n");
 }
-
-
-
-int Person::Menu()
+ int Person::Menu()
 {
 	int i = 0;
 	cout<<"Enter a object:\n1.FIO\n2.Email\n3.Telephone\n4.Data\n";
@@ -96,26 +114,21 @@ void Person::Input()
 		switch (this->type)
 		{
 		case TypeObject::isFIO:
-			static_cast<FIO*>(this)->InputFio();
+			static_cast<FIO*>(this)->Input();
 			break;
 		case TypeObject::isTelephone:
-			static_cast<Telephone*>(this)->InputTelephone();
+			static_cast<Telephone*>(this)->Input();
 			break;
 		case TypeObject::isEmail:
-			static_cast<Email*>(this)->InputEmail();
+			static_cast<Email*>(this)->Input();
 			break;
 		case TypeObject::isData:
-			static_cast<Data*>(this)->InputData();
+			static_cast<Data*>(this)->Input();
 			break;
 		}
 	}
 	else
 		printf("Error!\n");
-}
-
-TypeObject Person::GetType()
-{
-	return type;
 }
 
 FIO::FIO():Person()
@@ -131,7 +144,7 @@ void FIO::Print()
 	cout << "TableNum: " << TableNum<<endl;
 }
 
-void FIO::InputFio()
+void FIO::Input()
 {
 	cout << "Enter a FIO:" << endl;
 	cin >> family >> name >> fatherland;
@@ -146,11 +159,12 @@ Email::Email()
 
 Email::Email(int table):Person(TypeObject::isEmail,table){}
 
-void Email::InputEmail()
+void Email::Input()
 {
 	cout << "Enter a email adress:" << endl;
 	cin >> email;
 	cout << "Enter a TableNum:" << TableNum << endl;
+	cin >> TableNum;
 }
 
 void Email::Print()
@@ -166,12 +180,13 @@ Data::Data()
 
 Data::Data(int table):Person(TypeObject::isData,table){}
 
-void Data::InputData()
+void Data::Input()
 {
 	cout << "Enter a data:" << endl;
 	cin >> day >> month >> year;
 	cout << "Enter a TextNote:" << endl;
-	cin >> TextNote;
+	std::cin.ignore();
+	getline(cin, TextNote);
 	cout << "Enter a TableNum:"<< endl;
 	cin >> TableNum;
 	cout << endl;
@@ -184,7 +199,7 @@ void Data::Print()
 	cout << "TableNum:" << TableNum << endl;
 }
 
-int Telephone::check(std::string str)
+int Telephone::check(string str)
 {
 	int count = 0;
 		for (int i = 1; i <str.size(); i++)
@@ -207,19 +222,15 @@ Telephone::Telephone()
 
 Telephone::Telephone(int table):Person(TypeObject::isTelephone,table){}
 
-string Telephone::GetExplanation()
-{
-	return explanation;
-}
-
 void Telephone::Print()
 {
 	cout << "Telephone: " << telephone<<endl;
+
 	cout << "Explanation: " << explanation << endl;
 	cout << "TableNum: " << TableNum << endl;
 }
 
-void Telephone::InputTelephone()
+void Telephone::Input()
 {
 	cout << "Enter a telephone:" << endl;
 	cin >> telephone;
@@ -231,47 +242,16 @@ void Telephone::InputTelephone()
 		cin >> telephone;
 	}
 	cout << "Enter a explanation:" << endl;
-	cin >> explanation;
+	std::cin.ignore();
+	getline(cin, explanation);
 }
-Node* SubjList::SearchMin(Node* example, List* templist, int I)
+
+
+inline int SubjList::compare(FIO* rhs,FIO* lhs)
 {
-	Node* res = NULL, * temp = this->Head();
-	int count = I, i = 0, flag = 1;
-	for (i; i <this->Size(); i++, temp = temp->pNext) 
-	{
-		if (((Person*)temp)->GetType() == isFIO && compare((FIO*)example, (FIO*)temp) && ((Person*)example)->GetType() == isFIO)
-		{
-			count = i; 
-		}
-	}
-	pushBack(templist, res = Remove(lst, count)); 
-	count = 0;
-	temp = lst->head;
-	int j = 0, size = lst->size;
-	for (; temp;) 
-	{
-		if (((Person*)temp)->TableNum == ((Person*)res)->TableNum && strcmp(((FIO*)res)->family, ((FIO*)temp)->family) != 0)
-	
-		{
-			pushBack(templist, Remove(lst, j));
-			temp = lst->head;
-			j = 0; 
-		}
-		else
-		{
-			temp = temp->pNext;
-			j++; 
-		}
-
-	}
-	return NULL;
+	return rhs->GetFamily() > lhs->GetFamily();
 }
-
-//int SubjList::compare(FIO* a, FIO* b)
-//{
-//	return 0;
-//}
-int SubjList::search_elements(Person *base,std::string str)
+int SubjList::search_elements(Person *base,string str)
 {
 	const char* istr= NULL;
 	int flag = 0;
@@ -287,10 +267,7 @@ int SubjList::search_elements(Person *base,std::string str)
 		flag = 1;
 	return flag;
 }
-std::string Data::GetTextNote()
-{
-	return TextNote;
-}
+
 void SubjList::search(std::string str)
 {
 	Person* person = static_cast<Person *>(this->Head());
@@ -308,7 +285,7 @@ void SubjList::search(std::string str)
 }
 void SubjList::sortlist()
 {
-	SubjList* lst= NULL;
+	SubjList* lst= new SubjList;
 	int size = Size(), j = 0;
 	for (int i = 0; i < size; i++)
 	{
@@ -325,14 +302,48 @@ void SubjList::sortlist()
 		}
 	}
 	if (Size() > 0) 
-		while (Head())
+		while (this->Head())
 			lst->pushBack(Remove(0));
 
 	Node* p = lst->Head();
 	size = lst->Size();
 	for (int i = 0; i < size; i++) 
 	{
-		pushBack(lst->Remove(0));
+		this->pushBack(lst->Remove(0));
+	}
+}
+void SubjList::SearchMin(Node* example, SubjList* templist, int I)
+{
+	Node* res = nullptr, * temp = this->Head();
+	int count = I, i = 0, flag = 1;
+	for (i; i < this->Size(); i++, temp = temp->PNext())
+	{
+		if (((Person*)temp)->GetType() == TypeObject::isFIO && compare((FIO*)example, (FIO*)temp) 
+			&& ((Person*)example)->GetType() == TypeObject::isFIO)
+		{
+			count = i;
+		}
+	}
+	templist->pushBack(res = this->Remove(count));
+	count = 0;
+	temp = this->Head();
+	int j = 0, size = this->Size();
+	for (; temp;)
+	{
+		if ((static_cast<Person*>(temp)->GetTablenum() == static_cast<Person*>(res)->GetTablenum() 
+			&& static_cast<FIO*>(temp)->GetFamily() != static_cast<FIO*>(res)->GetFamily()))
+		{
+			templist->pushBack(this->Remove(j));
+			temp = this->Head();
+			j = 0;
+		}
+		else
+		{
+			temp = temp->PNext();
+			j++;
+			/*temp =GetList(j);*/
+		}
+
 	}
 }
 
