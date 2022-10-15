@@ -5,7 +5,13 @@ using namespace std;
 
 int main()
 {
-	List lst;
+	//List lst;
+	//Node* temp= new Node;
+	//Node* temp2 = new Node;
+	//lst.pushBack(temp2);
+	//lst.pushBack(temp);
+	//lst.pushBack(temp);
+	//lst.Print();
 	Person* base = new Person;
 	SubjList subj;
 	TypeObject type;
@@ -17,9 +23,12 @@ int main()
 			"Menu:\n1.Create object\n2.Out information on display\n3.Add to the end\n"
 			"4.Add to the start\n5.Delete of the end\n6.Sort list\n7.Find by given word\n0.Exit and delete object\n");
 		cin >> choose;
+		system("cls");
 		switch (choose)
 		{
+
 		case 1:
+
 			type = static_cast<TypeObject>(base->Menu());
 			base = base->create(type);
 			base->Input();
