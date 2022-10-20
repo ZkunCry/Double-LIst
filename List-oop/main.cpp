@@ -12,7 +12,7 @@ int main()
 	//lst.pushBack(temp);
 	//lst.pushBack(temp);
 	//lst.Print();
-	Person* base = new Person;
+	Person *base= nullptr;
 	SubjList subj;
 	TypeObject type;
 	int choose;

@@ -86,7 +86,7 @@ void Person::Print()
 		printf("Error!\n");
 }
 
-void SubjList::Print()
+void SubjList::Print()const
 {
 	if (this)
 		if (this->Head())
@@ -97,7 +97,7 @@ void SubjList::Print()
 	else
 		printf("ERROR: wrong list!\n");
 }
- int Person::Menu()
+ const int Person::Menu()
 {
 	int i = 0;
 	cout<<"Enter a object:\n1.FIO\n2.Email\n3.Telephone\n4.Data\n";
@@ -130,7 +130,7 @@ void Person::Input()
 }
 FIO::FIO():Person(TypeObject::isFIO){}
 
-void FIO::Print()
+void FIO::Print()const
 {
 	cout << endl;
 	cout << "Person: " << family << " " << name << " " << fatherland << endl;
@@ -155,7 +155,7 @@ void Email::Input()
 	cin >> TableNum;
 }
 
-void Email::Print()
+void Email::Print()const
 {
 	cout << "Email: " << email << endl;
 	cout << "TableNum:" << TableNum << endl;
@@ -175,7 +175,7 @@ void Data::Input()
 	cout << endl;
 }
 
-void Data::Print()
+void Data::Print()const
 {
 	cout << "Data : " << day <<" " << month <<" " << year << endl;
 	cout << "TextNote: " << TextNote << endl;
@@ -201,7 +201,7 @@ int Telephone::check(string str)const
 
 Telephone::Telephone():Person(TypeObject::isTelephone){}
 
-void Telephone::Print()
+void Telephone::Print()const
 {
 	cout << "Telephone: " << telephone<<endl;
 	cout << "Explanation: " << explanation << endl;
@@ -224,12 +224,11 @@ void Telephone::Input()
 	getline(cin, explanation);
 }
 
-
-int SubjList::compare(FIO* rhs,FIO* lhs)const
+const int SubjList::compare(FIO* rhs,FIO* lhs)const
 {
 	return rhs->GetFamily() > lhs->GetFamily();
 }
-int SubjList::search_elements(Person *base,string str)
+ int SubjList::search_elements(Person *base,string str)const
 {
 	const char* istr= NULL;
 	int flag = 0;
@@ -246,17 +245,18 @@ int SubjList::search_elements(Person *base,string str)
 	return flag;
 }
 
-void SubjList::search(string str)
+void SubjList::search(string str)const
 {
 	Person* person = static_cast<Person *>(this->Head());
 	int count = 0;
 	for (int i = 0;i<this->Size();i++)
 	{
-		if (search_elements(person = static_cast<Person*>(person->PNext()), str))
+		if (search_elements(person, str))
 		{
 			person->Print();
 			count++;
 		}
+		person = static_cast<Person*>(person->PNext());
 	}
 	if (count == 0)
 		printf("Search not found nothing\n");

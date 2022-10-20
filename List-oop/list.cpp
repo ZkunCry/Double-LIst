@@ -14,7 +14,6 @@ Node::~Node()noexcept
 {
 	if (owner)
 		owner->RemoveNode(this);
-
 }
 Node* List::RemoveNode(Node* node)
 {
@@ -156,34 +155,39 @@ Node* List::GetList(const size_t index)const
 
 void List::insert(size_t index, Node* temp)
 {
-	Node* tmp;
-	if (index < 0)
-		index = 0;
-	if (tmp = GetList(index))
+	if (compareNode(temp))
 	{
-		Node* elm = temp;
-		elm->pPrev = tmp->pPrev;
-		temp->owner = this;
-		elm->pNext = tmp;
-		tmp->pPrev = elm;
-		if (!elm->pPrev)
+		Node* tmp;
+		if (index < 0)
+			index = 0;
+		if (tmp = GetList(index))
 		{
-			head = elm;
+			Node* elm = temp;
+			elm->pPrev = tmp->pPrev;
+			temp->owner = this;
+			elm->pNext = tmp;
+			tmp->pPrev = elm;
+			if (!elm->pPrev)
+			{
+				head = elm;
+			}
+			else
+				elm->pPrev->pNext = elm;
+			if (!tmp->pNext)
+				tail = tmp;
+			size++;
 		}
 		else
-			elm->pPrev->pNext = elm;
-		if (!tmp->pNext)
-			tail = tmp;
-		size++;
+		{
+			temp->pNext = tail->pNext;
+			temp->pPrev = tail;
+			tail->pNext = temp;
+			tail = temp;
+			size++;
+		}
 	}
 	else
-	{
-		temp->pNext = tail->pNext;
-		temp->pPrev = tail;
-		tail->pNext = temp;
-		tail = temp;
-		size++;
-	}
+		return;
 }
 
 void List::erase(const size_t index, size_t number)

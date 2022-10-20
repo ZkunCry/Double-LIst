@@ -1,5 +1,6 @@
 #pragma once
 #include "list.h"
+
 using std::string;
 
 enum class TypeObject
@@ -17,15 +18,14 @@ protected:
 	TypeObject type;
 	size_t TableNum;
 	Person(TypeObject type);
-public:
 	Person();
+public:
 	Person * create(TypeObject type);
 	void Print();
-	int Menu();
+	const int Menu();
 	void Input();
 	TypeObject GetType()const;
 	int GetTablenum()const;
-
 };
 
 class FIO :public Person
@@ -35,7 +35,7 @@ private:
 public:
 	string GetFamily()const;
 	FIO();
-	void Print();
+	void Print()const;
 	void Input();
 };
 
@@ -46,7 +46,7 @@ private:
 public:
 	Email();
 	void Input();
-	void Print();
+	void Print()const;
 };
 
 class Telephone :public Person
@@ -58,7 +58,7 @@ private:
 public:
 	Telephone();
 	string GetExplanation()const;
-	void Print();
+	void Print()const;
 	void Input();
 };
 
@@ -71,17 +71,17 @@ public:
 	Data();
 	void Input();
 	string GetTextNote()const;
-	void Print();
+	void Print()const;
 };
 
 class SubjList :public List
 {
 public:
 	void sortlist();
-	void search(string str);
-	void Print();
+	void search(string str)const;
+	void Print()const;
 private:
 	void SearchMin(Node* example, SubjList* templist, int I);
-	int compare(FIO *rhs,FIO* lhs)const;
-	int search_elements(Person *base,string str);
+	const int compare(FIO *rhs,FIO* lhs)const;
+	int search_elements(Person *base,string str)const;
 };
