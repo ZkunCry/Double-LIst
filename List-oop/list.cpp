@@ -1,5 +1,5 @@
 #include "list.h"
-Node* Node::PNext()
+Node* Node::PNext()const
 {
 	return pNext;
 }
@@ -14,7 +14,6 @@ Node::~Node()noexcept
 {
 	if (owner)
 		owner->RemoveNode(this);
-
 }
 Node* List::RemoveNode(Node* node)
 {
@@ -42,7 +41,7 @@ List::~List()noexcept
 
 void List::pushFront(Node* temp)
 {
-	if (this)
+	if (this && compareNode(temp))
 	{
 		if (temp == nullptr)
 			return;
@@ -62,7 +61,7 @@ void List::pushFront(Node* temp)
 
 void List::pushBack(Node* temp)
 {
-	if (this)
+	if (this && compareNode(temp))
 	{
 		if (temp == nullptr)
 			return;
@@ -122,7 +121,7 @@ void List::popBack()
 		return;
 }
 
-Node* List::GetList(const size_t index)
+Node* List::GetList(const size_t index)const
 {
 	if (index < size && index >= 0)
 	{
@@ -156,34 +155,39 @@ Node* List::GetList(const size_t index)
 
 void List::insert(size_t index, Node* temp)
 {
-	Node* tmp;
-	if (index < 0)
-		index = 0;
-	if (tmp = GetList(index))
+	if (compareNode(temp))
 	{
-		Node* elm = temp;
-		elm->pPrev = tmp->pPrev;
-		temp->owner = this;
-		elm->pNext = tmp;
-		tmp->pPrev = elm;
-		if (!elm->pPrev)
+		Node* tmp;
+		if (index < 0)
+			index = 0;
+		if (tmp = GetList(index))
 		{
-			head = elm;
+			Node* elm = temp;
+			elm->pPrev = tmp->pPrev;
+			temp->owner = this;
+			elm->pNext = tmp;
+			tmp->pPrev = elm;
+			if (!elm->pPrev)
+			{
+				head = elm;
+			}
+			else
+				elm->pPrev->pNext = elm;
+			if (!tmp->pNext)
+				tail = tmp;
+			size++;
 		}
 		else
-			elm->pPrev->pNext = elm;
-		if (!tmp->pNext)
-			tail = tmp;
-		size++;
+		{
+			temp->pNext = tail->pNext;
+			temp->pPrev = tail;
+			tail->pNext = temp;
+			tail = temp;
+			size++;
+		}
 	}
 	else
-	{
-		temp->pNext = tail->pNext;
-		temp->pPrev = tail;
-		tail->pNext = temp;
-		tail = temp;
-		size++;
-	}
+		return;
 }
 
 void List::erase(const size_t index, size_t number)
@@ -233,7 +237,7 @@ void List::clear()
 	}
 }
 
-const size_t List::Size()
+const size_t List::Size()const
 {
 	return size;
 }
@@ -257,23 +261,28 @@ Node* List::Remove(size_t index)
 	else
 		return nullptr;
 }
-//void List::Print()
-//{
-//	std::cout << "Item: " << this << "\t"
-//		<< "head: " << head << "\t"
-//		<< "tail: " << tail << std::endl;
-//
-//	Node* p = head;
-//	for (int i = 0; p; i++, p = p->pNext)
-//		printf("%d\t%p\t%p\t%p;\n", i, p, p->pPrev, p->pNext);
-//}
+void List::Print()
+{
+	std::cout << "Item: " << this << "\t"
+		<< "head: " << head << "\t"
+		<< "tail: " << tail << std::endl;
 
-Node* List::Head()
+	Node* p = head;
+	for (int i = 0; p; i++, p = p->pNext)
+		printf("%d\t%p\t%p\t%p;\n", i, p, p->pPrev, p->pNext);
+}
+
+Node* List::Head()const 
 {
 	return head;
 }
 
-Node* List::Pnext()
+bool List::compareNode(Node* oth)
 {
-	return ((Node *)this)->pNext;
-}	
+	for (Node* temp = this->head; temp; temp = temp->pNext)
+	{
+		if (oth == temp)
+			return 0;
+	}
+	return 1;
+}
