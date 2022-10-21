@@ -1,3 +1,4 @@
+
 #include "subj.h"
 #include <string>
 #include <cctype>
@@ -52,10 +53,10 @@ Person* Person::create(TypeObject type)
 	return p;
 }
 
-Person::Person()
-{
-	type = TypeObject::None;
-}
+//Person::Person()
+//{
+//	type = TypeObject::None;
+//}
 
 Person::Person(TypeObject type)
 {
@@ -97,7 +98,7 @@ void SubjList::Print()const
 	else
 		printf("ERROR: wrong list!\n");
 }
- const int Person::Menu()
+const int Person::Menu()
 {
 	int i = 0;
 	cout<<"Enter a object:\n1.FIO\n2.Email\n3.Telephone\n4.Data\n";
@@ -232,17 +233,18 @@ const int SubjList::compare(FIO* rhs,FIO* lhs)const
 {
 	const char* istr= NULL;
 	int flag = 0;
+	string temp;
 	if (base->GetType() == TypeObject::isData)
 	{
-		istr = static_cast<Data*>(base)->GetTextNote().c_str();
+		temp = static_cast<Data*>(base)->GetTextNote();
+		istr = temp.c_str();
 	}
 	if (base->GetType() == TypeObject::isTelephone)
 	{
-		istr = static_cast<Telephone*>(base)->GetExplanation().c_str();
+		temp = static_cast<Telephone*>(base)->GetExplanation();
+		istr = temp.c_str();
 	}
-	if (istr)
-		flag = 1;
-	return flag;
+	return istr && strstr(istr,str.c_str());
 }
 
 void SubjList::search(string str)const
@@ -289,6 +291,7 @@ void SubjList::sortlist()
 	{
 		this->pushBack(lst->Remove(0));
 	}
+	delete lst;
 }
 void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 {
@@ -309,7 +312,7 @@ void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 	for (; temp;)
 	{
 		if ((static_cast<Person*>(temp)->GetTablenum() == static_cast<Person*>(res)->GetTablenum() 
-			&& static_cast<FIO*>(res) !=static_cast<FIO *>(temp)))
+			&& static_cast<FIO*>(res) != static_cast<FIO *>(temp)))
 		{
 			templist->pushBack(this->Remove(j));
 			temp = this->Head();

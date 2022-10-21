@@ -18,9 +18,8 @@ protected:
 	TypeObject type;
 	size_t TableNum;
 	Person(TypeObject type);
-	Person();
 public:
-	Person * create(TypeObject type);
+	static Person * create(TypeObject type);
 	void Print();
 	const int Menu();
 	void Input();
