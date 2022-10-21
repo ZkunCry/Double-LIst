@@ -157,7 +157,7 @@ Node* List::GetList(const size_t index)const
 
 void List::insert(size_t index, Node* temp)
 {
-	if (compareNode(temp))
+	if (temp->owner)
 	{
 		Node* tmp;
 		if (index < 0)

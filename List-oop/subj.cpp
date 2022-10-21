@@ -7,7 +7,51 @@ using std::cout;
 using std::cin;
 using std::endl;
 const static size_t  length = 4;
+class FIO :public Person
+{
+private:
+	string family, name, fatherland;
+public:
+	string GetFamily()const;
+	FIO();
+	void Print()const;
+	void Input();
+};
 
+class Email :public Person
+{
+private:
+	string email;
+public:
+	Email();
+	void Input();
+	void Print()const;
+};
+
+class Telephone :public Person
+{
+private:
+	string telephone;
+	string explanation;
+	int check(string str)const;
+public:
+	Telephone();
+	string GetExplanation()const;
+	void Print()const;
+	void Input();
+};
+
+class Data :public Person
+{
+private:
+	int day, month, year;
+	string TextNote;
+public:
+	Data();
+	void Input();
+	string GetTextNote()const;
+	void Print()const;
+};
  std::string Data::GetTextNote()const
 {
 	return TextNote;
@@ -225,9 +269,9 @@ void Telephone::Input()
 	getline(cin, explanation);
 }
 
-const int SubjList::compare(FIO* rhs,FIO* lhs)const
+const int SubjList::compare(Person* rhs,Person* lhs)const
 {
-	return rhs->GetFamily() > lhs->GetFamily();
+	return ((FIO*)rhs)->GetFamily() > ((FIO *)lhs)->GetFamily();
 }
  int SubjList::search_elements(Person *base,string str)const
 {
@@ -300,7 +344,7 @@ void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 	for (i; i < this->Size(); i++, temp = temp->PNext())
 	{
 		if (((Person*)temp)->GetType() == TypeObject::isFIO  
-			&& ((Person*)example)->GetType() == TypeObject::isFIO && compare((FIO*)example, (FIO*)temp))
+			&& ((Person*)example)->GetType() == TypeObject::isFIO && compare((Person *)example, (Person *)temp))
 		{
 			count = i;
 		}
