@@ -41,7 +41,7 @@ List::~List()noexcept
 
 void List::pushFront(Node* temp)
 {
-	if (this && compareNode(temp))
+	if (this && !temp->owner)
 	{
 		if (temp == nullptr)
 			return;
@@ -61,7 +61,7 @@ void List::pushFront(Node* temp)
 
 void List::pushBack(Node* temp)
 {
-	if (this && compareNode(temp))
+	if (this && !temp->owner)
 	{
 		if (temp == nullptr)
 			return;
@@ -94,6 +94,7 @@ void List::popFront()
 			head->pPrev = nullptr;
 		if (prev == tail)
 			tail = nullptr;
+		prev->owner = nullptr;
 		delete prev;
 		size--;
 	}
@@ -114,6 +115,7 @@ void List::popBack()
 			tail->pNext = nullptr;
 		if (prev == head)
 			head = nullptr;
+		prev->owner = nullptr;
 		delete prev;
 		size--;
 	}
@@ -214,6 +216,7 @@ void List::erase(const size_t index)
 			tail = tmp->pPrev;
 		if (!tmp->pPrev)
 			head = tmp->pNext;
+		tmp->owner = nullptr;
 		delete tmp;
 		size--;
 	}
@@ -255,6 +258,7 @@ Node* List::Remove(size_t index)
 			tail = tmp->pPrev;
 		if (!tmp->pPrev)
 			head = tmp->pNext;
+		tmp->owner = nullptr;
 		size--;
 		return tmp;
 	}
@@ -275,14 +279,4 @@ void List::Print()
 Node* List::Head()const 
 {
 	return head;
-}
-
-bool List::compareNode(Node* oth)
-{
-	for (Node* temp = this->head; temp; temp = temp->pNext)
-	{
-		if (oth == temp)
-			return 0;
-	}
-	return 1;
 }

@@ -38,6 +38,5 @@ public:
     void Print();
 protected:
     Node* Head()const;
-private:
-    bool compareNode(Node* oth);
+
 };
