@@ -11,7 +11,7 @@ private:
 public:
     Node();
     virtual ~Node();
-   virtual  Node* PNext()const;
+    Node* PNext()const;
     friend class List;
 };
 class List

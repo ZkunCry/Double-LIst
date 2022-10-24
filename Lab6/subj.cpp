@@ -14,7 +14,7 @@ private:
 	string family, name, fatherland;
 public:
 	TypeObject GetType()override;
-	string GetFamily()const;
+	string GetFamily()const override;
 
 	void Print()override;
 	void Input()override;
@@ -38,7 +38,7 @@ private:
 	int check(string str)const;
 public:
 	TypeObject GetType()override;
-	string GetExplanation()const;
+	string GetExplanation()const override;
 	void Print()override;
 	void Input()override;
 };
@@ -52,7 +52,7 @@ public:
 	TypeObject GetType()override;
 
 	void Input()override;
-	string GetTextNote()const;
+	string GetTextNote()const override;
 	void Print()override;
 };
 
@@ -66,7 +66,17 @@ int Person::GetTablenum()const
 	return this->TableNum;
 }
 
-string Person::GetFamily()
+string Person::GetFamily()const
+{
+	return "";
+}
+
+string Person::GetExplanation()const
+{
+	return "";
+}
+
+string Person::GetTextNote()const
 {
 	return "";
 }
@@ -75,7 +85,6 @@ string Telephone::GetExplanation()const
 {
 	return explanation;
 }
-
 
 TypeObject FIO::GetType()
 {
@@ -110,10 +119,11 @@ Person* Person::create(TypeObject type)
 	return p;
 }
 
-Node* Person::PNext() const
+Person* Person::PNext() const
 {
-	return Node::PNext();
+	return ((Person *)Node::PNext());
 }
+
 
 void SubjList::Print()const
 {
@@ -248,13 +258,12 @@ const int SubjList::compare(Person* rhs,Person* lhs)const
 	string temp;
 	if (base->GetType() == TypeObject::isData)
 	{
-
-		temp = static_cast<Data*>(base)->GetTextNote();
+		temp = base->GetTextNote();
 		istr = temp.c_str();
 	}
 	if (base->GetType() == TypeObject::isTelephone)
 	{
-		temp = static_cast<Telephone*>(base)->GetExplanation();
+		temp = base->GetExplanation();
 		istr = temp.c_str();
 	}
 	return istr && strstr(istr,str.c_str());
@@ -271,11 +280,12 @@ void SubjList::search(string str)const
 			person->Print();
 			count++;
 		}
-		person = static_cast<Person*>(person->PNext());
+		person = person->PNext();
 	}
 	if (count == 0)
 		printf("Search not found nothing\n");
 }
+
 void SubjList::sortlist()
 {
 	SubjList* lst= new SubjList;

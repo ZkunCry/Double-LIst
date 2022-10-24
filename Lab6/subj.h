@@ -18,13 +18,15 @@ protected:
 	size_t TableNum;
 public:
 	static Person * create(TypeObject type);
-	Node* PNext()const override;
+	Person* PNext()const;
 	virtual void Print()=0;
 	static const int Menu();
 	virtual void Input()=0;
 	virtual TypeObject GetType()=0;
 	int GetTablenum()const;
-	virtual string GetFamily();
+	virtual string GetFamily()const;
+	virtual string GetExplanation()const;
+	virtual string GetTextNote()const;
 };
 
 class SubjList :public List
