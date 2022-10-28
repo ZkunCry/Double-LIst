@@ -189,6 +189,7 @@ void List::insert(size_t index, Node* temp)
 		{
 			temp->pNext = tail->pNext;
 			temp->pPrev = tail;
+			temp->owner = this;
 			tail->pNext = temp;
 			tail = temp;
 			size++;
@@ -259,8 +260,7 @@ Node* List::Remove(size_t index)
 		if (tmp)
 			return RemoveNode(tmp);
 	}
-	else
-		return nullptr;
+	return nullptr;
 }
 void List::Print()
 {

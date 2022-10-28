@@ -13,9 +13,9 @@ class FIO :public Person
 private:
 	string family, name, fatherland;
 public:
-	TypeObject GetType()override;
-	string GetFamily()const override;
-
+	const TypeObject GetType()override;
+	const int compare(Person* rhs)const override;
+	string GetCompare()const override;
 	void Print()override;
 	void Input()override;
 };
@@ -25,9 +25,10 @@ class Email :public Person
 private:
 	string email;
 public:
-	TypeObject GetType()override;
+	const TypeObject GetType()override;
 	void Input()override;
 	void Print()override;
+	const int compare(Person* rhs)const override;
 };
 
 class Telephone :public Person
@@ -37,10 +38,11 @@ private:
 	string explanation;
 	int check(string str)const;
 public:
-	TypeObject GetType()override;
-	string GetExplanation()const override;
+	const TypeObject GetType()override;
+	string Get()const override;
 	void Print()override;
 	void Input()override;
+	const int compare(Person* rhs)const override;
 };
 
 class Data :public Person
@@ -49,16 +51,17 @@ private:
 	int day, month, year;
 	string TextNote;
 public:
-	TypeObject GetType()override;
+	const TypeObject GetType()override;
 
 	void Input()override;
-	string GetTextNote()const override;
+	string Get()const override;
 	void Print()override;
+	const int compare(Person* rhs)const override;
 };
 
- std::string Data::GetTextNote()const
+ std::string Data::Get()const
 {
-	return TextNote;
+	return this->TextNote;
 }
 
 int Person::GetTablenum()const
@@ -71,27 +74,37 @@ string Person::GetFamily()const
 	return "";
 }
 
-string Person::GetExplanation()const
+string Person::Get()const
 {
 	return "";
 }
 
-string Person::GetTextNote()const
+string Person::GetCompare() const
 {
-	return "";
+	return string();
 }
 
-string Telephone::GetExplanation()const
+const int Person::compare(Person* rhs) const
+{
+	return 0;
+}
+
+string Telephone::Get()const
 {
 	return explanation;
 }
 
-TypeObject FIO::GetType()
+const TypeObject FIO::GetType()
 {
 	return TypeObject::isFIO;
 }
 
-string FIO::GetFamily()const
+const int FIO::compare(Person* rhs) const
+{
+	return this->family > rhs->GetCompare() && rhs->GetCompare()!= "";
+}
+
+string FIO::GetCompare() const
 {
 	return this->family;
 }
@@ -119,12 +132,10 @@ Person* Person::create(TypeObject type)
 	return p;
 }
 
-Person* Person::PNext() const
+Person* Person::PNext()const
 {
 	return ((Person *)Node::PNext());
 }
-
-
 void SubjList::Print()const
 {
 	if (this)
@@ -159,7 +170,7 @@ void FIO::Input()
 	cin >> TableNum;
 }
 
-TypeObject Email::GetType()
+const TypeObject Email::GetType()
 {
 	return TypeObject::isEmail;
 }
@@ -178,7 +189,12 @@ void Email::Print()
 	cout << "TableNum:" << TableNum << endl;
 }
 
-TypeObject Data::GetType()
+const int Email::compare(Person* rhs) const
+{
+	return 0;
+}
+
+const TypeObject Data::GetType()
 {
 	return TypeObject::isData;
 }
@@ -197,9 +213,14 @@ void Data::Input()
 
 void Data::Print()
 {
-	cout << "Data : " << day <<" " << month <<" " << year << endl;
+	cout << "Data : " << day <<" day" << " " << month <<" month" << " " << year <<" year" << endl;
 	cout << "TextNote: " << TextNote << endl;
 	cout << "TableNum: " << TableNum << endl;
+}
+
+const int Data::compare(Person* rhs) const
+{
+	return 0;
 }
 
 int Telephone::check(string str)const
@@ -219,7 +240,7 @@ int Telephone::check(string str)const
 }
 
 
-TypeObject Telephone::GetType()
+const TypeObject Telephone::GetType()
 {
 	return TypeObject::isTelephone;
 }
@@ -247,25 +268,17 @@ void Telephone::Input()
 	getline(cin, explanation);
 }
 
-const int SubjList::compare(Person* rhs,Person* lhs)const
+const int Telephone::compare(Person* rhs) const
 {
-	return rhs->GetFamily() > lhs->GetFamily();
+	return 0;
 }
- int SubjList::search_elements(Person *base,string str)const
+int SubjList::search_elements(Person *base,string str)const
 {
 	const char* istr= NULL;
 	int flag = 0;
 	string temp;
-	if (base->GetType() == TypeObject::isData)
-	{
-		temp = base->GetTextNote();
-		istr = temp.c_str();
-	}
-	if (base->GetType() == TypeObject::isTelephone)
-	{
-		temp = base->GetExplanation();
-		istr = temp.c_str();
-	}
+	temp = base->Get();
+	istr = temp.c_str();
 	return istr && strstr(istr,str.c_str());
 }
 
@@ -292,7 +305,7 @@ void SubjList::sortlist()
 	int size = Size(), j = 0;
 	for (int i = 0; i < size; i++)
 	{
-		Node* temp = GetList(j); 
+		Node* temp = GetList(j);
 		if (temp) 
 		{
 			if ((static_cast<Person *>(temp)->GetType() == TypeObject::isFIO))
@@ -311,19 +324,17 @@ void SubjList::sortlist()
 	Node* p = lst->Head();
 	size = lst->Size();
 	for (int i = 0; i < size; i++) 
-	{
 		this->pushBack(lst->Remove(0));
-	}
 	delete lst;
 }
+
 void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 {
 	Node* res = nullptr, * temp = this->Head();
 	int count = I, i = 0, flag = 1;
 	for (i; i < this->Size(); i++, temp = temp->PNext())
 	{
-		if (((Person*)temp)->GetType() == TypeObject::isFIO  
-			&& ((Person*)example)->GetType() == TypeObject::isFIO && compare((Person *)example, (Person *)temp))
+		if (((Person *)example)->compare((Person *)temp))
 		{
 			count = i;
 		}
@@ -335,11 +346,10 @@ void SubjList::SearchMin(Node* example, SubjList* templist, int I)
 	for (; temp;)
 	{
 		if ((static_cast<Person*>(temp)->GetTablenum() == static_cast<Person*>(res)->GetTablenum() 
-			&& static_cast<FIO*>(res) != static_cast<FIO *>(temp)))
+			&& res != temp))
 		{
+			temp = temp->PNext();
 			templist->pushBack(this->Remove(j));
-			temp = this->Head();
-			j = 0;
 		}
 		else
 		{

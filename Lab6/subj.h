@@ -22,11 +22,13 @@ public:
 	virtual void Print()=0;
 	static const int Menu();
 	virtual void Input()=0;
-	virtual TypeObject GetType()=0;
+	virtual const TypeObject GetType()=0;
 	int GetTablenum()const;
 	virtual string GetFamily()const;
-	virtual string GetExplanation()const;
-	virtual string GetTextNote()const;
+	virtual string Get()const;
+	virtual string GetCompare()const;
+	virtual const int compare(Person* rhs)const;
+
 };
 
 class SubjList :public List
@@ -37,6 +39,5 @@ public:
 	void Print()const;
 private:
 	void SearchMin(Node* example, SubjList* templist, int I);
-	const int compare(Person *rhs,Person* lhs)const;
 	int search_elements(Person *base,string str)const;
 };
